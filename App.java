@@ -1,6 +1,7 @@
 package Semana1;
 
 import java.sql.*;
+import java.util.List;
 import java.util.Scanner;
 
 public class App {
@@ -10,28 +11,40 @@ public class App {
                 DriverManager.getConnection("jdbc:h2:~/dbpa","sa", "");
 
         //1. Crear tabla
-        //createTable(con);
+        createTable(con);
 
         //2. Agregar datos/inserts
-        //insertData(con);
+        insertData(con);
 
         //3. Consultar los datos
-        //getAllData(con);
+        getAllData(con);
 
         //4. Obtener promedio
-        //System.out.println(promedioEdad(con));
+        System.out.println(promedioEdad(con));
 
         //5. Obtener nombres inician por J
-        //nombresJ(con);
+        nombresJ(con);
 
         //6.
-
-        Scanner lector = new Scanner(System.in);
+        /*Scanner lector = new Scanner(System.in);
         System.out.println("Ingrese el ID: ");
         String id2search = lector.nextLine();
-        searchById(id2search, con);
+        searchById(id2search, con);*/
 
+        //7. creacion de una lista de Personas
+        List<Person> listaPerson = List.of(
+                new Person(0, "Tais", "Valarezo", 18),
+                new Person(0, "Kevin", "Regalado", 22),
+                new Person(0, "Ronin", "Montero", 20),
+                new Person(0, "Hermin", "Espinoza", 20),
+                new Person(0, "Jeremy", "Escudero", 23),
+                new Person(0, "Oliver", "Chuquimarca", 21)
+        );
+
+        //generarListaPersona(con, listaPerson);
         con.close();
+
+
     }
     private static void getAllData(Connection con) throws  SQLException{
         String select = "SELECT ID, FIRST_NAME, LAST_NAME, AGE FROM REGISTRATION";
@@ -132,6 +145,29 @@ public class App {
                             rs.getInt("AGE"));
                 }
             }
+        }
+    }
+
+    //7.
+    private static void generarListaPersona( Connection con,List<Person> lista) throws SQLException {
+        var data = "INSERT INTO REGISTRATION(FIRST_NAME, LAST_NAME, AGE) VALUES(?, ?, ?) ";
+        try (PreparedStatement pst = con.prepareStatement(data)){
+            for (int i = 0; i < lista.size(); i++){
+                pst.setString(1, lista.get(i).getName());
+                pst.setString(2, lista.get(i).getApe());
+                pst.setInt(3, lista.get(i).getEdad());
+            }
+
+            try( ResultSet rs = pst.executeQuery()){
+                while(rs.next()){
+                    System.out.printf("%s - %s - (%d)\n",
+                            rs.getString("FIRST_NAME"),
+                            rs.getString("LAST_NAME"),
+                            rs.getInt("AGE"));
+                }
+            }
+            int count = pst.executeUpdate();
+            System.out.println(count);
         }
     }
 }

@@ -1,0 +1,1 @@
+JMH S 21 org.example.AppSimple S 55 org.example.jmh_generated.AppSimple_doSomething_jmhTest S 11 doSomething S 11 AverageTime E A 1 1 1 E I 1 2 T 6 100 ms E I 1 4 T 6 100 ms E I 1 2 E E E E E E U 7 SECONDS E E 
